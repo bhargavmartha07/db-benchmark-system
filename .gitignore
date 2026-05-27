@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+postgres_data/
+mongo_data/
+benchmark_report.json

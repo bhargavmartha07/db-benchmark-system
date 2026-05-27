@@ -1,0 +1,85 @@
+services:
+
+  postgres:
+    image: postgres:15
+
+    container_name: postgres_benchmark
+    shm_size: "1gb"
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: benchmarkdb
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    command:
+      - postgres
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - max_connections=200
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:7
+
+    container_name: mongo_benchmark
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongo_data:/data/db
+
+    command:
+      [
+        "mongod",
+        "--replSet",
+        "rs0",
+        "--bind_ip_all"
+      ]
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--eval",
+          "db.runCommand({ ping: 1 })"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  python_app:
+    build: .
+
+    container_name: benchmark_app
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      mongo:
+        condition: service_healthy
+
+    volumes:
+      - .:/app
+
+    command: tail -f /dev/null
+
+volumes:
+  postgres_data:
+  mongo_data:

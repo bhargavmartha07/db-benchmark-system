@@ -1,0 +1,5 @@
+faker
+psycopg[binary]
+pymongo
+pandas
+numpy

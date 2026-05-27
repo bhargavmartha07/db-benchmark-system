@@ -1,0 +1,26 @@
+{
+    "project": "PostgreSQL vs MongoDB Benchmark",
+
+    "db_ports": {
+        "postgres": 5432,
+        "mongodb": 27017
+    },
+
+    "dataset": {
+        "users": 100000,
+        "sessions": 1000000,
+        "events": 5000000
+    },
+
+    "test_user_id": "3860e717-ad74-4e6a-8476-f70659f39017",
+
+    "features": [
+        "PostgreSQL JSONB",
+        "GIN Indexing",
+        "MongoDB Time-Series Collections",
+        "Window Functions",
+        "Aggregation Pipelines",
+        "pg_stat_statements",
+        "Dockerized Architecture"
+    ]
+}
