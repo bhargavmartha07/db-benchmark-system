@@ -42,6 +42,7 @@ def create_postgres_schema():
     CREATE TABLE IF NOT EXISTS events (
         event_id UUID PRIMARY KEY,
         session_id UUID REFERENCES sessions(session_id),
+        user_id UUID REFERENCES users(user_id),
         event_type TEXT,
         payload JSONB,
         created_at TIMESTAMP
@@ -74,6 +75,20 @@ def create_postgres_schema():
     cur.execute("""
     CREATE INDEX IF NOT EXISTS idx_events_session_created
     ON events(session_id, created_at);
+    """)
+
+    cur.execute("""
+    CREATE INDEX IF NOT EXISTS idx_events_user_created
+    ON events(user_id, created_at);
+    """)
+
+    # ----------------------------------------
+    # EVENT TYPE INDEX
+    # ----------------------------------------
+
+    cur.execute("""
+    CREATE INDEX IF NOT EXISTS idx_events_event_type
+    ON events(event_type);
     """)
 
     # ----------------------------------------

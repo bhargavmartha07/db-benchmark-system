@@ -6,6 +6,8 @@
         "mongodb": 27017
     },
 
+    "total_event_count": 5000000,
+
     "dataset": {
         "users": 100000,
         "sessions": 1000000,

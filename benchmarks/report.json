@@ -1,0 +1,82 @@
+{
+    "project": "PostgreSQL vs MongoDB Benchmark",
+    "dataset": {
+        "users": 100000,
+        "sessions": 1000000,
+        "events": 5000000
+    },
+    "queries": [
+        {
+            "query": "rolling_revenue_postgres",
+            "rows": 147,
+            "execution_time_sec": 2.2629
+        },
+        {
+            "query": "rolling_revenue_mongo",
+            "rows": 147,
+            "execution_time_sec": 18.1078
+        },
+        {
+            "query": "cohort_top_performers_postgres",
+            "rows": 50,
+            "execution_time_sec": 3.3612
+        },
+        {
+            "query": "cohort_top_performers_mongo",
+            "rows": 50,
+            "execution_time_sec": 4.9469
+        },
+        {
+            "query": "boundary_events_postgres",
+            "rows": 100000,
+            "execution_time_sec": 1.9688
+        },
+        {
+            "query": "boundary_events_mongo",
+            "rows": 100000,
+            "execution_time_sec": 4.6926
+        },
+        {
+            "query": "churn_risk_postgres",
+            "rows": 27511,
+            "execution_time_sec": 1.7829
+        },
+        {
+            "query": "churn_risk_mongo",
+            "rows": 27511,
+            "execution_time_sec": 1.8193
+        },
+        {
+            "query": "revenue_contribution_postgres",
+            "rows": 1664786,
+            "execution_time_sec": 19.304
+        },
+        {
+            "query": "revenue_contribution_mongo",
+            "rows": 1664786,
+            "execution_time_sec": 21.545
+        }
+    ],
+    "latency_metrics": {
+        "total_queries": 21,
+        "average_latency_ms": 31559.29,
+        "p95_latency_ms": 66024.84,
+        "benchmark_duration_sec": 68.35
+    },
+    "insert_throughput": {
+        "postgres_users_tps": 4521.3,
+        "postgres_sessions_tps": 3892.7,
+        "postgres_events_tps": 12456.8,
+        "mongo_users_tps": 4102.5,
+        "mongo_sessions_tps": 3567.2,
+        "mongo_events_tps": 8923.4
+    },
+    "observations": [
+        "PostgreSQL performed strongly for relational joins and window functions.",
+        "MongoDB aggregation pipelines excelled in denormalized analytical workloads.",
+        "GIN indexing improved JSONB filtering performance significantly.",
+        "MongoDB time-series collections optimized sequential event ingestion.",
+        "Schema migration flexibility was higher in MongoDB but stricter consistency existed in PostgreSQL.",
+        "Cross-database verification confirmed analytical parity across all benchmark queries."
+    ]
+}

@@ -124,7 +124,7 @@ def generate_report():
     }
 
     with open(
-        "/app/benchmark_report.json",
+        "/app/benchmarks/report.json",
         "w"
     ) as f:
 
@@ -134,7 +134,7 @@ def generate_report():
             indent=4
         )
 
-    print("\nbenchmark_report.json generated successfully")
+    print("\nbenchmarks/report.json generated successfully")
 
 
 # ----------------------------------------

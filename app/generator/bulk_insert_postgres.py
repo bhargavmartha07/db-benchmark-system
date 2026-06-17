@@ -84,17 +84,19 @@ def bulk_insert_events(events):
             INSERT INTO events (
                 event_id,
                 session_id,
+                user_id,
                 event_type,
                 payload,
                 created_at
             )
-            VALUES (%s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s)
             """,
 
             [
                 (
                     e["event_id"],
                     e["session"]["session_id"],
+                    e["user_id"],
                     e["event_type"],
                     psycopg.types.json.Jsonb(e["payload"]),
                     e["created_at"]

@@ -75,6 +75,18 @@ services:
       mongo:
         condition: service_healthy
 
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: benchmarkdb
+      MONGO_HOST: mongo
+      MONGO_PORT: "27017"
+
+    env_file:
+      - .env
+
     volumes:
       - .:/app
 

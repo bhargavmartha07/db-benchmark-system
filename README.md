@@ -159,6 +159,20 @@ ON events
 USING GIN(payload jsonb_path_ops);
 ```
 
+### Event Type Index
+
+```sql
+CREATE INDEX idx_events_event_type
+ON events(event_type);
+```
+
+### Composite User-Time Index
+
+```sql
+CREATE INDEX idx_events_user_created
+ON events(user_id, created_at);
+```
+
 ---
 
 # MongoDB Features
@@ -184,6 +198,14 @@ db.createCollection("events", {
     granularity: "hours"
   }
 })
+```
+
+---
+
+## Compound Index
+
+```javascript
+db.events.createIndex({ user_id: 1, created_at: -1 })
 ```
 
 ---
@@ -330,7 +352,7 @@ The benchmark system simulates concurrent analytical traffic.
 Tool used:
 
 ```bash
-pgbench
+python -m app.benchmark.p95_benchmark
 ```
 
 ---
@@ -403,6 +425,8 @@ Measured:
 
 # Schema Migration Experiment
 
+The migration script at `app/benchmark/mongo_lazy_migration.py` runs both PostgreSQL and MongoDB migrations sequentially and measures execution time.
+
 ## PostgreSQL
 
 ```sql
@@ -412,9 +436,10 @@ ADD COLUMN app_version TEXT DEFAULT '1.0';
 
 ### Observations
 
-- Strict schema enforcement
-- Potential locking behavior
-- Strong consistency guarantees
+- Strict schema enforcement via ALTER TABLE
+- Locking behavior depends on table size and write load
+- Strong consistency guarantees after migration
+- Timed automatically by the migration script
 
 ---
 
@@ -423,15 +448,16 @@ ADD COLUMN app_version TEXT DEFAULT '1.0';
 ```javascript
 db.events.updateMany(
   { app_version: { $exists: false } },
-  { $set: { app_version: "1.0" } }
+  { $set: { app_version: "1.0.0" } }
 )
 ```
 
 ### Observations
 
-- Flexible schema evolution
-- Lazy migration strategy
-- No rigid schema enforcement
+- Flexible schema evolution with no downtime
+- Lazy migration strategy using conditional updates
+- No rigid schema enforcement required
+- Target collection is events (not sessions)
 
 ---
 
@@ -517,6 +543,29 @@ db-benchmark-system/
 │
 └── requirements.txt
 ```
+
+---
+
+# Generate Benchmark Report
+
+```bash
+docker exec -it benchmark_app python -m app.benchmark.generate_report
+```
+
+The report is written to `benchmarks/report.json` containing:
+- Execution times for all 5 queries on both databases
+- Insert throughput (TPS) metrics
+- p95 latency metrics
+
+---
+
+# Run Schema Migration
+
+```bash
+docker exec -it benchmark_app python -m app.benchmark.mongo_lazy_migration
+```
+
+Runs ALTER TABLE on PostgreSQL and updateMany on MongoDB, timing both operations.
 
 ---
 

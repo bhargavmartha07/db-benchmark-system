@@ -58,5 +58,6 @@ def create_mongo_schema():
     db.events.create_index("session.session_id")
     db.events.create_index("user.cohort_month")
     db.events.create_index("created_at")
+    db.events.create_index([("user_id", 1), ("created_at", -1)])
 
     print("MongoDB collections + indexes ready")
